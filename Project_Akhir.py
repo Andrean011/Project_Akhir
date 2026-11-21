@@ -162,27 +162,22 @@ def tampil_laporan():
         print("Belum ada transaksi untuk dilaporkan.")
         return
 
-    # Menghitung total pendapatan
     pendapatan = 0
 
     for trx in riwayat:
         pendapatan += trx["total"]
 
-    # Menghitung jumlah dan rata-rata transaksi
     jumlah_transaksi = len(riwayat)
     rata_rata = pendapatan / jumlah_transaksi
 
-    # Mencari transaksi terbesar
     transaksi_terbesar = max(riwayat, key=lambda trx: trx["total"])
 
-    # Menghitung transaksi parkir lebih dari 8 jam
     parkir_menginap = 0
 
     for trx in riwayat:
         if trx["jam"] > 8:
             parkir_menginap += 1
 
-    # Menampilkan laporan
     print(f"Total pendapatan       : Rp {pendapatan:,}")
     print(f"Jumlah transaksi       : {jumlah_transaksi}")
     print(f"Rata-rata transaksi    : Rp {rata_rata:,.0f}")
@@ -195,21 +190,71 @@ def tampil_laporan():
     print(f"Parkir lebih dari 8 jam: {parkir_menginap}")
     print("=" * 40)
 ## ENDING CODE DARI FUNGSI LAPORAN PARKIR ##
+############################################
+## CODE UNTUK FUNGSI CARI DAN URUTKAN ##
+
+def cari_kendaraan(nama_dicari):
+    hasil = []
+
+    for item in kendaraan:
+        if nama_dicari.lower() in item["nama"].lower():
+            hasil.append(item)
+
+    return hasil
+
+
+def urutkan_tarif():
+    hasil = sorted(kendaraan, key=lambda item: item["tarif"])
+    return hasil
+
+
+def menu_cari_urutkan():
+    print("\n========== CARI DAN URUTKAN ==========")
+    print("1. Cari kendaraan berdasarkan nama")
+    print("2. Urutkan kendaraan berdasarkan tarif")
+    
+    pilih = input("Pilih fitur: ")
+
+    if pilih == "1":
+        nama_dicari = input("Masukkan nama kendaraan: ")
+
+        hasil = cari_kendaraan(nama_dicari)
+
+        if len(hasil) > 0:
+            print("\nKendaraan ditemukan:")
+            print(f"{'Kode':<8}{'Nama':<20}{'Tarif/Jam':<15}{'Stok'}")
+            print("-" * 55)
+
+            for item in hasil:
+                print(
+                    f"{item['kode']:<8}"
+                    f"{item['nama']:<20}"
+                    f"Rp {item['tarif']:<12,}"
+                    f"{item['stok']}"
+                )
+        else:
+            print("Kendaraan tidak ditemukan!")
+
+    elif pilih == "2":
+        hasil = urutkan_tarif()
+
+        print("\nDaftar kendaraan berdasarkan tarif:")
+        print(f"{'Kode':<8}{'Nama':<20}{'Tarif/Jam':<15}{'Stok'}")
+        print("-" * 55)
+
+        for item in hasil:
+            print(
+                f"{item['kode']:<8}"
+                f"{item['nama']:<20}"
+                f"Rp {item['tarif']:<12,}"
+                f"{item['stok']}"
+            )
+
+    else:
+        print("Pilihan tidak valid!")
+## ENDING CODE UNTUK FUNGSI CARI DAN URUTKAN ##
 ##############################################
 ## CODE STRUK PARKIR ##
-    
-    print("\n========== STRUK PARKIR ==========")
-    print(f"Pemilik        : {pemilik}")
-    print(f"Kendaraan      : {kendaraan_pilih['nama']}")
-    print(f"Jumlah         : {jumlah}")
-    print(f"Lama parkir    : {jam:g} jam")
-    print("-" * 35)
-    print(f"Tarif/Jam      : Rp {tarif:,}")
-    print(f"Subtotal       : Rp {subtotal:,}")
-    print(f"Keterangan     : {keterangan}")
-    print(f"Total bayar    : Rp {total:,}")
-    print("==================================")
-    print("Transaksi berhasil disimpan!")
 
 while True:
     print("\n===== SISTEM PARKIR KAMPUS TEKNIK =====")
@@ -235,6 +280,9 @@ while True:
 
     elif pilih == "4":
         tampil_laporan()
+
+    elif pilih == "5":
+        menu_cari_urutkan()
 
     elif pilih == "0":
         print("Terima kasih telah menggunakan sistem parkir Teknik.")
